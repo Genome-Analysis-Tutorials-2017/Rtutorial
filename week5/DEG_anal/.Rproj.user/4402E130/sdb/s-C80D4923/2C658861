@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "### 1. AssayData (FPKM)\nfpkm=read.csv(\"file/HCCvsNT_FPKM.csv\")\n\n# 데이터 구조 및 내용 확인하는 습관 들이기\ndim(fpkm) # 27313 21\nhead(fpkm)\n\n# fpkm의 rowname을 gene.name 으로 지정\nrownames(fpkm)=fpkm$gene.name\nhead(fpkm) # 확인\n\n# 첫번째 열 (gene.name) 제거\nfpkm=fpkm[,-1]\nhead(fpkm)\n\n\n### 2. featureData\ngtf=read.delim(\"file/gencode.v22.gtf\")\ndim(gtf)\nhead(gtf)\n\n# rowname 지정\nrownames(gtf)=gtf$gene.id\nhead(fpkm)\nhead(gtf)\n\n\n# fpkm의 rowname과 order를 맞춰야 함\nmatch(rownames(fpkm)[1:10], rownames(gtf)) # 기준을 앞으로!\n\nrow.od=match(rownames(fpkm), rownames(gtf)) # 순서를 row.od 로 지정\ngtf=gtf[row.od,] # gtf 를 row.od 에 맞추어 재정렬\nhead(gtf)\n\n\n### 3. phenoData\np_info=read.csv(\"file/patient_info.csv\")\np_info\n\nrownames(p_info)=p_info$sample.ID # rowname을 sample.ID로 지정\n\n# fpkm의 colname과 order를 맞춰야 함\ncolnames(fpkm)\nrownames(p_info)\nmatch(colnames(fpkm), rownames(p_info)) # 순서가 일치함\n\ncol.od=match(colnames(fpkm), rownames(p_info)) # 만약 일치하지 않으면 match 사용\np_info=p_info[col.od,]\n\n\n### make expressionSet\nlibrary(Biobase)\nclass(fpkm)\nclass(gtf)\nclass(p_info)\n\nExpressionSet(assayData = fpkm, featureData = gtf, phenoData = p_info) # error\n?ExpressionSet\neset=ExpressionSet(assayData = as.matrix(fpkm), featureData = AnnotatedDataFrame(gtf), phenoData = AnnotatedDataFrame(p_info))\neset\n\nsave(eset, file = \"data/eset.rda\")\n\n\n### Extract expressionSet data\ndata(eset)\neset\n\nexprs(eset)\npData(eset)\nfData(eset)\n\nsampleNames(eset)\nfeatureNames(eset)\nvarLabels(eset)\nfvarLabels(eset)\n\n\n",
+    "created" : 1506232761577.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "195243109",
+    "id" : "2C658861",
+    "lastKnownWriteTime" : 1506242218,
+    "last_content_update" : 1506242218352,
+    "path" : "C:/Users/jihye/Desktop/week5/DEG_anal/Rscript/01_make_expressionSet.R",
+    "project_path" : "Rscript/01_make_expressionSet.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

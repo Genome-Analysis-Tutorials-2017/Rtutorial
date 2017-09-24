@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "data(eset)\n\n# AssayData를 불러와 edat으로 지정\nedat=exprs(eset)\n\n### 분포 확인\nhist(edat)\nboxplot(edat)\n\n\n### log2 scale로 줄이기 \n# 최소값을 0으로 맞추기 위해 모든 수에 1을 더한 후 log2를 취함\nrange(edat)\n\nedat=log2(edat+1)\nhist(edat)\nboxplot(edat)\n\nexprs(eset)=edat # eset의 AssayData를 log2 변환한 값으로 바꿔줌\n\n\n\n\n\n### 그룹별 평균 및 fold change 구하기\nhead(edat) # 1~10 : HCC, 11~20 : NT\n\n# [행,열] 잊지마세요\nhcc.edat=edat[,1:10]\nnt.edat=edat[,11:20]\n\n# 만약 sample 순서가 순차적이지 않다면? grep 이용!\ngrep(\"AJHCC\", colnames(edat))\ngrep(\"AJNT\", colnames(edat))\n\nhcc.edat=edat[,grep(\"AJHCC\", colnames(edat))] # colname에 AJHCC 문자열이 포함된 위치를 알려주시오\nnt.edat=edat[,grep(\"AJNT\", colnames(edat))] # colname에 AJNT 문자열이 포함된 위치를 알려주시오\n\nhead(hcc.edat)\nhead(nt.edat)\n\nhcc.mean=rowMeans(hcc.edat)\nnt.mean=rowMeans(nt.edat)\nfc=hcc.mean - nt.mean # case (실험군) group을 앞으로 두세요\n\n# eset의 featureData에 추가\nfData(eset)=data.frame(fData(eset), hcc.mean, nt.mean, fc)\n\n\n# fc 분포 확인\nhist(fc)\n\n# 2/-2 이상 차이나는 유전자는 몇개?\nlength(which(fc > 2)) # 133\nlength(which(fc <(-2))) # 216 음수는 괄호 한번더 씌우기! \n\n\n### 그룹간 t.test\nhead(pData(eset))\npdat=pData(eset)\n\nt.test(edat[1,]~pdat$tissue.type)$p.value\np.value=apply(edat, 1, function(a) t.test(a~pdat$tissue.type)$p.value)\n\nfData(eset)$p.value = p.value\n\n\n\n\n### DEG만 뽑아서 deg.eset 만들어 저장\n\ndeg.idx=which(abs(fc) > 2 & p.value < 0.05)\nlength(deg.idx)\n\ndeg.eset=eset[deg.idx,] # ExpressionSet도 [행,열] 방식으로 선택 가능 !\ndeg.eset # 343\n\n# fc 순서로 order하기\nfdat=fData(deg.eset)\nrow.od=order(fdat$fc)\n\nfdat=fdat[row.od,]\nhead(fdat)\ntail(fdat)\n\ndeg.eset=deg.eset[row.od,]\nsave(deg.eset, file = \"data/deg.eset.rda\")\n\n\n\n\n\n",
+    "created" : 1506234771592.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3525134916",
+    "id" : "25E52748",
+    "lastKnownWriteTime" : 1506240408,
+    "last_content_update" : 1506240408808,
+    "path" : "C:/Users/jihye/Desktop/week5/DEG_anal/Rscript/02_deg.R",
+    "project_path" : "Rscript/02_deg.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

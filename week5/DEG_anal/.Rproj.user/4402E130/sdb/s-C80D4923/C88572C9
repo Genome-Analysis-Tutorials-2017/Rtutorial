@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "################\n#heatmap \n################\n#install.packages(\"gplots\")\nlibrary(gplots)\n\ndata(deg.eset)\n\ndat=exprs(deg.eset)\ngcen.dat=dat-rowMeans(dat)\nhead(gcen.dat)\n\n\nbreaks=seq(-3, 3, 0.01)\ncolorset=colorRampPalette(c(\"navyblue\",\"white\", \"firebrick3\"))(length(breaks)-1)\nheatmap.2(gcen.dat, Rowv=F, Colv=F, col=colorset, breaks=breaks, density.info=\"none\", trace=\"none\", symm=F, symkey=T, scale=\"none\") \nheatmap.2(gcen.dat, Rowv=T, Colv=T, col=colorset, breaks=breaks, density.info=\"none\", trace=\"none\", symm=F, symkey=T, scale=\"none\") \n\nargs(heatmap.2)\n\n# top 10 DEGs\nidx=c(1:10,334:343)\nlabRow=fData(deg.eset)$symbol[idx]\n\nheatmap.2(gcen.dat[idx,], Rowv=F, Colv=F, col=colorset, breaks=breaks, density.info=\"none\", trace=\"none\", symm=F, symkey=T, scale=\"none\", margins = c(10,10), labRow=labRow) \nfData(deg.eset)[idx,]\n\n\n\n################\n#boxplot\n################\n#install.packages(\"ggplot2\")\nlibrary(ggplot2)\n\ngene=\"GPC3\"\ni=which(fData(deg.eset)$symbol == gene)\n\ndf=data.frame(expr=exprs(deg.eset)[i,], tissue.type=pData(deg.eset)$tissue.type)\nhead(df)\ng=ggplot(data = df, aes(x=tissue.type, y = expr, fill = tissue.type)) + geom_boxplot(width=0.5) + geom_jitter(width=0.1)\ng + theme_bw(20) + ylab(\"Expression Levels\") + xlab(\"\") + ylim(c(0,15))\n\n?theme_bw\n?geom_jitter\n\n\n################\n#barplot\n################\n\ndf=data.frame(df, sample=sampleNames(deg.eset))\nhead(df)\ng=ggplot(data = df, aes(x=sample, y = expr, fill = tissue.type)) + geom_bar(stat = \"identity\")\ng + theme_bw(20) + theme(axis.text.x = element_text(angle = 90, hjust = 1))+ylab(\"Expression Levels\") + xlab(\"\") + ylim(c(0,15))\n\n\n\n",
+    "created" : 1506236364538.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3566423079",
+    "id" : "C88572C9",
+    "lastKnownWriteTime" : 1506242259,
+    "last_content_update" : 1506242259252,
+    "path" : "C:/Users/jihye/Desktop/week5/DEG_anal/Rscript/03_visualization.R",
+    "project_path" : "Rscript/03_visualization.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
