@@ -13,8 +13,9 @@ head(gcen.dat)
 
 breaks=seq(-3, 3, 0.01)
 colorset=colorRampPalette(c("navyblue","white", "firebrick3"))(length(breaks)-1)
-heatmap.2(gcen.dat, Rowv=F, Colv=F, col=colorset, breaks=breaks, density.info="none", trace="none", symm=F, symkey=T, scale="none") 
-heatmap.2(gcen.dat, Rowv=T, Colv=T, col=colorset, breaks=breaks, density.info="none", trace="none", symm=F, symkey=T, scale="none") 
+graphics.off()
+heatmap.2(gcen.dat, Rowv=F, Colv=F, col=colorset, breaks=breaks, trace="none") 
+heatmap.2(gcen.dat, Rowv=T, Colv=T, col=colorset, breaks=breaks, trace="none") 
 
 args(heatmap.2)
 
@@ -22,7 +23,7 @@ args(heatmap.2)
 idx=c(1:10,334:343)
 labRow=fData(deg.eset)$symbol[idx]
 
-heatmap.2(gcen.dat[idx,], Rowv=F, Colv=F, col=colorset, breaks=breaks, density.info="none", trace="none", symm=F, symkey=T, scale="none", margins = c(10,10), labRow=labRow) 
+heatmap.2(gcen.dat[idx,], Rowv=F, Colv=F, col=colorset, breaks=breaks, trace="none", margins = c(10,10), labRow=labRow) 
 fData(deg.eset)[idx,]
 
 
